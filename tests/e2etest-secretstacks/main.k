@@ -1,11 +1,11 @@
-# e2etest-externalsecrets - helm.aws ExternalSecrets E2E Test
-# ===========================================================
+# e2etest-secretstacks - aws SecretStack E2E Test
+# ================================================
 # Tests installation of external-secrets with AWS Pod Identity for
 # Secrets Manager and SSM Parameter Store access.
 #
 # This test creates:
 # 1. An AutoEKSCluster using subnet IDs from the persistent hops-test network
-# 2. A helm.aws ExternalSecrets that composes:
+# 2. An aws SecretStack that composes:
 #    - helm.hops.ops.com.ai/ExternalSecrets (base Helm release)
 #    - aws.hops.ops.com.ai/PodIdentity (IAM role + Pod Identity for Secrets Manager/SSM)
 #
@@ -27,7 +27,7 @@ import file
 import datetime
 import math
 import models.io.upbound.dev.meta.v1alpha1 as metav1alpha1
-import models.ai.com.ops.hops.aws.helm.v1alpha1 as helmawsv1alpha1
+import models.ai.com.ops.hops.aws.v1alpha1 as awsv1alpha1
 
 # Read AWS credentials from local file (gitignored)
 _creds = file.read("secrets/aws-creds")
@@ -54,7 +54,7 @@ _private_subnet_ids = [
 
 _items = [
     metav1alpha1.E2ETest {
-        metadata.name = "externalsecrets"
+        metadata.name = "secretstacks"
         spec = {
             crossplane = {
                 autoUpgrade.channel = "Rapid"
@@ -189,7 +189,7 @@ _items = [
                 }
             ]
 
-            # manifests: All XRs that need cleanup (AutoEKSCluster, ExternalSecrets)
+            # manifests: All XRs that need cleanup (AutoEKSCluster, SecretStack)
             # Note: Uses persistent hops-test network - no Network manifest needed
             manifests = [
                 # 1. AutoEKSCluster - uses subnet IDs from persistent hops-test network
@@ -229,8 +229,8 @@ _items = [
                     }
                 }
 
-                # 2. helm.aws ExternalSecrets - installs external-secrets with AWS Pod Identity
-                helmawsv1alpha1.ExternalSecrets {
+                # 2. aws SecretStack - installs external-secrets with AWS Pod Identity
+                awsv1alpha1.SecretStack {
                     metadata.name = "external-secrets"
                     metadata.namespace = _namespace
                     spec = {

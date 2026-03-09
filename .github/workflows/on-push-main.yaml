@@ -27,10 +27,10 @@ jobs:
     with:
       examples: |
         [
-          { "example": "examples/externalsecrets/minimal.yaml" },
-          { "example": "examples/externalsecrets/standard.yaml" }
+          { "example": "examples/secretstacks/minimal.yaml" },
+          { "example": "examples/secretstacks/standard.yaml" }
         ]
-      api_path: apis/externalsecrets
+      api_path: apis/secretstacks
       error_on_missing_schemas: true
 
   test:
@@ -47,7 +47,7 @@ jobs:
         [
           "networks.aws.hops.ops.com.ai",
           "autoeksclusters.aws.hops.ops.com.ai",
-          "externalsecrets.helm.aws.hops.ops.com.ai"
+          "secretstacks.aws.hops.ops.com.ai"
         ]
       timeout-minutes: 60
       cleanup-timeout-minutes: 45

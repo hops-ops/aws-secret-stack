@@ -2,7 +2,7 @@ import models.io.upbound.dev.meta.v1alpha1 as metav1alpha1
 import models.k8s.apimachinery.pkg.apis.meta.v1 as metav1
 
 # ==============================================================================
-# Unit tests for helm.aws ExternalSecrets XRD
+# Unit tests for aws SecretStack XRD
 # ==============================================================================
 
 _items = [
@@ -12,13 +12,13 @@ _items = [
     metav1alpha1.CompositionTest {
         metadata.name = "minimal-renders-helm-and-pod-identity"
         spec = {
-            compositionPath = "apis/externalsecrets/composition.yaml"
-            xrdPath = "apis/externalsecrets/definition.yaml"
+            compositionPath = "apis/secretstacks/composition.yaml"
+            xrdPath = "apis/secretstacks/definition.yaml"
             timeoutSeconds = 60
             validate = False
             xr = {
-                apiVersion = "helm.aws.hops.ops.com.ai/v1alpha1"
-                kind = "ExternalSecrets"
+                apiVersion = "aws.hops.ops.com.ai/v1alpha1"
+                kind = "SecretStack"
                 metadata.name = "external-secrets"
                 spec = {
                     clusterName = "my-cluster"
@@ -57,13 +57,13 @@ _items = [
     metav1alpha1.CompositionTest {
         metadata.name = "custom-namespace-propagates"
         spec = {
-            compositionPath = "apis/externalsecrets/composition.yaml"
-            xrdPath = "apis/externalsecrets/definition.yaml"
+            compositionPath = "apis/secretstacks/composition.yaml"
+            xrdPath = "apis/secretstacks/definition.yaml"
             timeoutSeconds = 60
             validate = False
             xr = {
-                apiVersion = "helm.aws.hops.ops.com.ai/v1alpha1"
-                kind = "ExternalSecrets"
+                apiVersion = "aws.hops.ops.com.ai/v1alpha1"
+                kind = "SecretStack"
                 metadata.name = "external-secrets"
                 spec = {
                     clusterName = "prod-cluster"

@@ -1,15 +1,15 @@
 apiVersion: apiextensions.crossplane.io/v1
 kind: Composition
 metadata:
-  name: externalsecrets.helm.aws.hops.ops.com.ai
+  name: secretstacks.aws.hops.ops.com.ai
 spec:
   compositeTypeRef:
-    apiVersion: helm.aws.hops.ops.com.ai/v1alpha1
-    kind: ExternalSecrets
+    apiVersion: aws.hops.ops.com.ai/v1alpha1
+    kind: SecretStack
   mode: Pipeline
   pipeline:
   - functionRef:
-      name: hops-ops-helm-aws-external-secretsrender
+      name: hops-ops-aws-secret-stackrender
     step: render
   - functionRef:
       name: crossplane-contrib-function-auto-ready

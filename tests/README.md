@@ -9,15 +9,15 @@ make render   # Run composition render tests
 make test     # Run all unit tests
 ```
 
-## E2E Tests (e2etest-externalsecrets)
+## E2E Tests (e2etest-secretstacks)
 
 Full integration test that deploys real AWS infrastructure:
 1. Creates AutoEKSCluster using persistent hops-test network
-2. Deploys helm.aws ExternalSecrets (external-secrets + AWS Pod Identity)
+2. Deploys aws SecretStack (external-secrets + AWS Pod Identity)
 
 ### Prerequisites
 
-1. Create `tests/e2etest-externalsecrets/secrets/aws-creds` with AWS credentials:
+1. Create `tests/e2etest-secretstacks/secrets/aws-creds` with AWS credentials:
    ```ini
    [default]
    aws_access_key_id = AKIA...

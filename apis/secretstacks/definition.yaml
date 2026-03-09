@@ -1,12 +1,12 @@
 apiVersion: apiextensions.crossplane.io/v2
 kind: CompositeResourceDefinition
 metadata:
-  name: externalsecrets.helm.aws.hops.ops.com.ai
+  name: secretstacks.aws.hops.ops.com.ai
 spec:
-  group: helm.aws.hops.ops.com.ai
+  group: aws.hops.ops.com.ai
   names:
-    kind: ExternalSecrets
-    plural: externalsecrets
+    kind: SecretStack
+    plural: secretstacks
   scope: Namespaced
   defaultCompositeDeletePolicy: Foreground
   versions:
@@ -15,11 +15,11 @@ spec:
     served: true
     schema:
       openAPIV3Schema:
-        description: ExternalSecrets installs external-secrets with AWS Pod Identity for Secrets Manager and SSM Parameter Store access.
+        description: SecretStack installs external-secrets with AWS Pod Identity for Secrets Manager and SSM Parameter Store access.
         type: object
         properties:
           spec:
-            description: ExternalSecretsSpec defines the desired state of ExternalSecrets.
+            description: SecretStackSpec defines the desired state of SecretStack.
             type: object
             properties:
               clusterName:
@@ -100,7 +100,7 @@ spec:
             - clusterName
             - aws
           status:
-            description: ExternalSecretsStatus defines the observed state.
+            description: SecretStackStatus defines the observed state.
             type: object
             properties:
               ready:

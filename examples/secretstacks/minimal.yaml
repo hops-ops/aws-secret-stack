@@ -1,5 +1,5 @@
-apiVersion: helm.aws.hops.ops.com.ai/v1alpha1
-kind: ExternalSecrets
+apiVersion: aws.hops.ops.com.ai/v1alpha1
+kind: SecretStack
 metadata:
   name: external-secrets
   namespace: default

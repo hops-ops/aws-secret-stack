@@ -1,4 +1,4 @@
-# helm-aws-external-secrets
+# aws-secret-stack
 
 Installs external-secrets with AWS Pod Identity for Secrets Manager and SSM Parameter Store access.
 
@@ -10,8 +10,8 @@ Automatically provisions IAM role and Pod Identity association for external-secr
 ## Usage
 
 ```yaml
-apiVersion: helm.aws.hops.ops.com.ai/v1alpha1
-kind: ExternalSecrets
+apiVersion: aws.hops.ops.com.ai/v1alpha1
+kind: SecretStack
 metadata:
   name: external-secrets
   namespace: default
@@ -24,8 +24,8 @@ spec:
 With custom values:
 
 ```yaml
-apiVersion: helm.aws.hops.ops.com.ai/v1alpha1
-kind: ExternalSecrets
+apiVersion: aws.hops.ops.com.ai/v1alpha1
+kind: SecretStack
 metadata:
   name: external-secrets
   namespace: default

@@ -18,7 +18,7 @@
 # Labels
 {{- $defaultLabels := dict
   "hops.ops.com.ai/managed" "true"
-  "hops.ops.com.ai/externalsecrets" $name
+  "hops.ops.com.ai/secretstack" $name
 }}
 {{- $labels := merge $defaultLabels ($spec.labels | default dict) }}
 
@@ -46,7 +46,7 @@
 # Default tags
 {{- $defaultTags := dict
   "hops.ops.com.ai/managed" "true"
-  "hops.ops.com.ai/externalsecrets" $name
+  "hops.ops.com.ai/secretstack" $name
 }}
 {{- $awsTags := merge $defaultTags ($aws.tags | default dict) }}
 
