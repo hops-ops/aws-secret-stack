@@ -47,6 +47,13 @@ jobs:
       aws-use-oidc: true
       aws-account-id: "034489662075"
       aws-region: us-east-2
+      write-env-files: true
+      env-vars: |
+        {
+          "ADMIN_ROLE_ARN": "${{ vars.ADMIN_ROLE_ARN }}",
+          "PRIVATE_SUBNET_ID_A": "${{ vars.PRIVATE_SUBNET_ID_A }}",
+          "PRIVATE_SUBNET_ID_B": "${{ vars.PRIVATE_SUBNET_ID_B }}"
+        }
       debug-resource-types: |
         [
           "networks.aws.hops.ops.com.ai",
