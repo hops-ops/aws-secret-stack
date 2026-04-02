@@ -60,6 +60,7 @@
 # Initialize $state
 # ==============================================================================
 {{- $sopsSpec := $spec.sops | default dict }}
+{{- $secretStoreSpec := $spec.secretStore | default dict }}
 
 {{- $state := dict
   "name" $name
@@ -81,6 +82,11 @@
     "permissionsBoundaryArn" ($aws.permissionsBoundaryArn | default "")
     "rolePrefix" ($aws.rolePrefix | default "")
     "tags" $awsTags
+  )
+  "secretStore" (dict
+    "enabled" ($secretStoreSpec.enabled | default true)
+    "scope" ($secretStoreSpec.scope | default "Namespaced")
+    "name" ($secretStoreSpec.name | default "default")
   )
   "sops" (dict
     "enabled" ($sopsSpec.enabled | default true)

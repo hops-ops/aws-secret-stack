@@ -166,10 +166,10 @@ _items = [
     }
 
     # ==========================================================================
-    # Test 5: ClusterSecretStore renders when ESO is ready
+    # Test 5: Namespaced SecretStore renders by default when ESO is ready
     # ==========================================================================
     metav1alpha1.CompositionTest {
-        metadata.name = "cluster-secret-store-gated-on-eso-ready"
+        metadata.name = "secret-store-default-namespaced"
         spec = {
             compositionPath = "apis/secretstacks/composition.yaml"
             xrdPath = "apis/secretstacks/definition.yaml"
@@ -202,18 +202,18 @@ _items = [
                 {
                     apiVersion = "kubernetes.m.crossplane.io/v1alpha1"
                     kind = "Object"
-                    metadata.name = "external-secrets-cluster-secret-store"
+                    metadata.name = "external-secrets-secret-store"
                     spec.forProvider.manifest = {
                         apiVersion = "external-secrets.io/v1beta1"
-                        kind = "ClusterSecretStore"
-                        metadata.name = "default"
+                        kind = "SecretStore"
+                        metadata = {
+                            name = "default"
+                            namespace = "external-secrets"
+                        }
                         spec.provider.aws = {
                             service = "SecretsManager"
                             region = "us-east-1"
-                            auth.jwt.serviceAccountRef = {
-                                name = "external-secrets"
-                                namespace = "external-secrets"
-                            }
+                            auth.jwt.serviceAccountRef.name = "external-secrets"
                         }
                     }
                 }
@@ -303,6 +303,158 @@ _items = [
                         "hops.ops.com.ai/managed" = "true"
                         "hops.ops.com.ai/secretstack" = "my-stack"
                     }
+                }
+            ]
+        }
+    }
+    # ==========================================================================
+    # Test 8: ClusterSecretStore when scope is Cluster (opt-in)
+    # ==========================================================================
+    metav1alpha1.CompositionTest {
+        metadata.name = "cluster-secret-store-opt-in"
+        spec = {
+            compositionPath = "apis/secretstacks/composition.yaml"
+            xrdPath = "apis/secretstacks/definition.yaml"
+            timeoutSeconds = 60
+            validate = False
+            xr = {
+                apiVersion = "aws.hops.ops.com.ai/v1alpha1"
+                kind = "SecretStack"
+                metadata.name = "external-secrets"
+                spec = {
+                    clusterName = "my-cluster"
+                    secretStore.scope = "Cluster"
+                    aws.region = "us-east-1"
+                }
+            }
+            observedResources = [
+                {
+                    apiVersion = "helm.hops.ops.com.ai/v1alpha1"
+                    kind = "ExternalSecrets"
+                    metadata = {
+                        name = "external-secrets"
+                        annotations = {"crossplane.io/composition-resource-name" = "helm-external-secrets"}
+                    }
+                    status.conditions = [
+                        {type = "Ready", status = "True"}
+                        {type = "Synced", status = "True"}
+                    ]
+                }
+            ]
+            assertResources = [
+                {
+                    apiVersion = "kubernetes.m.crossplane.io/v1alpha1"
+                    kind = "Object"
+                    metadata.name = "external-secrets-cluster-secret-store"
+                    spec.forProvider.manifest = {
+                        apiVersion = "external-secrets.io/v1beta1"
+                        kind = "ClusterSecretStore"
+                        metadata.name = "default"
+                        spec.provider.aws = {
+                            service = "SecretsManager"
+                            region = "us-east-1"
+                            auth.jwt.serviceAccountRef = {
+                                name = "external-secrets"
+                                namespace = "external-secrets"
+                            }
+                        }
+                    }
+                }
+            ]
+        }
+    }
+
+    # ==========================================================================
+    # Test 9: SecretStore disabled renders nothing
+    # ==========================================================================
+    metav1alpha1.CompositionTest {
+        metadata.name = "secret-store-disabled"
+        spec = {
+            compositionPath = "apis/secretstacks/composition.yaml"
+            xrdPath = "apis/secretstacks/definition.yaml"
+            timeoutSeconds = 60
+            validate = False
+            xr = {
+                apiVersion = "aws.hops.ops.com.ai/v1alpha1"
+                kind = "SecretStack"
+                metadata.name = "no-store"
+                spec = {
+                    clusterName = "my-cluster"
+                    secretStore.enabled = False
+                    sops.enabled = False
+                    aws.region = "us-east-1"
+                }
+            }
+            observedResources = [
+                {
+                    apiVersion = "helm.hops.ops.com.ai/v1alpha1"
+                    kind = "ExternalSecrets"
+                    metadata = {
+                        name = "no-store"
+                        annotations = {"crossplane.io/composition-resource-name" = "helm-external-secrets"}
+                    }
+                    status.conditions = [
+                        {type = "Ready", status = "True"}
+                        {type = "Synced", status = "True"}
+                    ]
+                }
+            ]
+            # Only Helm + PodIdentity + Usage, no SecretStore, no KMS Key
+            assertResources = [
+                {
+                    apiVersion = "helm.hops.ops.com.ai/v1alpha1"
+                    kind = "ExternalSecrets"
+                    metadata.name = "no-store"
+                }
+                {
+                    apiVersion = "aws.hops.ops.com.ai/v1alpha1"
+                    kind = "PodIdentity"
+                    metadata.name = "no-store-pod-identity"
+                }
+            ]
+        }
+    }
+
+    # ==========================================================================
+    # Test 10: Custom SecretStore name
+    # ==========================================================================
+    metav1alpha1.CompositionTest {
+        metadata.name = "custom-secret-store-name"
+        spec = {
+            compositionPath = "apis/secretstacks/composition.yaml"
+            xrdPath = "apis/secretstacks/definition.yaml"
+            timeoutSeconds = 60
+            validate = False
+            xr = {
+                apiVersion = "aws.hops.ops.com.ai/v1alpha1"
+                kind = "SecretStack"
+                metadata.name = "external-secrets"
+                spec = {
+                    clusterName = "my-cluster"
+                    secretStore.name = "aws-sm"
+                    aws.region = "us-east-1"
+                }
+            }
+            observedResources = [
+                {
+                    apiVersion = "helm.hops.ops.com.ai/v1alpha1"
+                    kind = "ExternalSecrets"
+                    metadata = {
+                        name = "external-secrets"
+                        annotations = {"crossplane.io/composition-resource-name" = "helm-external-secrets"}
+                    }
+                    status.conditions = [
+                        {type = "Ready", status = "True"}
+                        {type = "Synced", status = "True"}
+                    ]
+                }
+            ]
+            assertResources = [
+                {
+                    apiVersion = "kubernetes.m.crossplane.io/v1alpha1"
+                    kind = "Object"
+                    metadata.name = "external-secrets-secret-store"
+                    spec.forProvider.manifest.metadata.name = "aws-sm"
                 }
             ]
         }

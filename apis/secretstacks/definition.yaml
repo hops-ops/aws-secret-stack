@@ -88,6 +88,22 @@ spec:
                     enum:
                     - ProviderConfig
                     - ClusterProviderConfig
+              secretStore:
+                description: ESO SecretStore configuration. Creates a ClusterSecretStore or namespaced SecretStore pointing to AWS Secrets Manager.
+                type: object
+                properties:
+                  enabled:
+                    description: Enable SecretStore creation. Defaults to true.
+                    type: boolean
+                  scope:
+                    description: "Scope of the SecretStore: Namespaced creates a SecretStore in the stack namespace, Cluster creates a ClusterSecretStore. Defaults to Namespaced."
+                    type: string
+                    enum:
+                    - Namespaced
+                    - Cluster
+                  name:
+                    description: Name of the SecretStore resource. Defaults to "default".
+                    type: string
               sops:
                 description: SOPS KMS key configuration. Creates a KMS key for encrypting secrets in git via the hops CLI.
                 type: object
