@@ -37,6 +37,12 @@
   "kind" ($awsProviderConfigRef.kind | default "ProviderConfig")
 }}
 
+{{- $k8sProviderConfigRef := $spec.kubernetesProviderConfigRef | default dict }}
+{{- $k8sProviderConfigRef = dict
+  "name" ($k8sProviderConfigRef.name | default $clusterName)
+  "kind" ($k8sProviderConfigRef.kind | default "ProviderConfig")
+}}
+
 # ==============================================================================
 # AWS defaults
 # ==============================================================================
@@ -53,6 +59,8 @@
 # ==============================================================================
 # Initialize $state
 # ==============================================================================
+{{- $sopsSpec := $spec.sops | default dict }}
+
 {{- $state := dict
   "name" $name
   "clusterName" $clusterName
@@ -66,6 +74,7 @@
     "values" ($spec.values | default dict)
     "overrideAllValues" ($spec.overrideAllValues | default dict)
   )
+  "kubernetesProviderConfigRef" $k8sProviderConfigRef
   "aws" (dict
     "region" $awsRegion
     "providerConfigRef" $awsProviderConfigRef
@@ -73,8 +82,13 @@
     "rolePrefix" ($aws.rolePrefix | default "")
     "tags" $awsTags
   )
+  "sops" (dict
+    "enabled" ($sopsSpec.enabled | default true)
+  )
   "serviceAccount" (dict
     "name" "external-secrets"
     "namespace" $namespace
   )
+  "observed" (dict)
+  "status" (dict)
 }}

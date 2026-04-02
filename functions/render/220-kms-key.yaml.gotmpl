@@ -1,0 +1,31 @@
+# code: language=yaml
+#
+# KMS Key for SOPS encryption
+#
+# Creates a KMS key used by the hops CLI for encrypting/decrypting
+# secrets stored in git via SOPS. Gated on sops.enabled.
+#
+
+{{- if $state.sops.enabled }}
+---
+apiVersion: kms.aws.m.upbound.io/v1beta1
+kind: Key
+metadata:
+  name: {{ $state.name }}-sops
+  annotations:
+    {{ setResourceNameAnnotation "kms-key" }}
+  labels: {{ $state.labels | toJson }}
+spec:
+  managementPolicies: {{ $state.managementPolicies | toJson }}
+  forProvider:
+    region: {{ $state.aws.region }}
+    description: SOPS encryption key for {{ $state.clusterName }}
+    enableKeyRotation: true
+    tags:
+      {{- $nameTags := dict "Name" (printf "%s-sops" $state.name) }}
+      {{- $merged := merge $nameTags $state.aws.tags }}
+      {{- toYaml $merged | nindent 6 }}
+  providerConfigRef:
+    name: {{ $state.aws.providerConfigRef.name }}
+    kind: {{ $state.aws.providerConfigRef.kind }}
+{{- end }}

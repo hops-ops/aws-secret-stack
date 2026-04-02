@@ -32,6 +32,32 @@
   {{- end }}
 {{- end }}
 
+# Check if kms-key is ready and extract ARN
+{{- $kmsKeyObs := get $observed "kms-key" | default dict }}
+{{- $kmsKeyResource := $kmsKeyObs.resource | default dict }}
+{{- $kmsKeyStatus := $kmsKeyResource.status | default dict }}
+{{- $kmsKeyAtProvider := $kmsKeyStatus.atProvider | default dict }}
+{{- $kmsKeyConditions := $kmsKeyStatus.conditions | default list }}
+{{- $kmsKeyReady := false }}
+{{- range $cond := $kmsKeyConditions }}
+  {{- if and (eq $cond.type "Ready") (eq $cond.status "True") }}
+    {{- $kmsKeyReady = true }}
+  {{- end }}
+{{- end }}
+{{- $kmsKeyArn := $kmsKeyAtProvider.arn | default "" }}
+
+# Check if cluster-secret-store is ready
+{{- $clusterSecretStoreObs := get $observed "cluster-secret-store" | default dict }}
+{{- $clusterSecretStoreResource := $clusterSecretStoreObs.resource | default dict }}
+{{- $clusterSecretStoreStatus := $clusterSecretStoreResource.status | default dict }}
+{{- $clusterSecretStoreConditions := $clusterSecretStoreStatus.conditions | default list }}
+{{- $clusterSecretStoreReady := false }}
+{{- range $cond := $clusterSecretStoreConditions }}
+  {{- if and (eq $cond.type "Ready") (eq $cond.status "True") }}
+    {{- $clusterSecretStoreReady = true }}
+  {{- end }}
+{{- end }}
+
 # ==============================================================================
 # Compute status output
 # ==============================================================================
@@ -42,8 +68,11 @@
 {{- $state = set $state "observed" (dict
   "helmExternalSecrets" (dict "ready" $helmExternalSecretsReady)
   "podIdentity" (dict "ready" $podIdentityReady)
+  "kmsKey" (dict "ready" $kmsKeyReady "arn" $kmsKeyArn)
+  "clusterSecretStore" (dict "ready" $clusterSecretStoreReady)
 ) }}
 
 {{- $state = set $state "status" (dict
   "ready" $ready
+  "kmsKeyArn" $kmsKeyArn
 ) }}

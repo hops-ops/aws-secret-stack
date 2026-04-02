@@ -9,3 +9,6 @@ apiVersion: {{ $xr.apiVersion }}
 kind: {{ $xr.kind }}
 status:
   ready: {{ $state.status.ready }}
+  {{- if $state.status.kmsKeyArn }}
+  kmsKeyArn: {{ $state.status.kmsKeyArn }}
+  {{- end }}

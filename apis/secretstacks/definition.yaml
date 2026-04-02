@@ -75,6 +75,26 @@ spec:
                 description: Helm values that replace all defaults.
                 type: object
                 x-kubernetes-preserve-unknown-fields: true
+              kubernetesProviderConfigRef:
+                description: Reference to the Kubernetes ProviderConfig for creating Object resources. Defaults to clusterName.
+                type: object
+                properties:
+                  name:
+                    description: Name of the Kubernetes ProviderConfig.
+                    type: string
+                  kind:
+                    description: Kind of the ProviderConfig. Defaults to ProviderConfig.
+                    type: string
+                    enum:
+                    - ProviderConfig
+                    - ClusterProviderConfig
+              sops:
+                description: SOPS KMS key configuration. Creates a KMS key for encrypting secrets in git via the hops CLI.
+                type: object
+                properties:
+                  enabled:
+                    description: Enable SOPS KMS key creation. Defaults to true.
+                    type: boolean
               aws:
                 description: AWS configuration for Pod Identity.
                 type: object
@@ -106,5 +126,8 @@ spec:
               ready:
                 description: Overall readiness.
                 type: boolean
+              kmsKeyArn:
+                description: ARN of the SOPS KMS key. Empty when sops is disabled.
+                type: string
         required:
         - spec

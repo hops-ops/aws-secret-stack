@@ -19,7 +19,9 @@ build:
 # Format: example_path::observed_resources_path (observed_resources_path is optional)
 EXAMPLES := \
     examples/secretstacks/minimal.yaml:: \
-    examples/secretstacks/standard.yaml::
+    examples/secretstacks/standard.yaml:: \
+    examples/secretstacks/standard.yaml::examples/test/mocks/observed-resources/standard/steps/1/ \
+    examples/secretstacks/standard.yaml::examples/test/mocks/observed-resources/standard/steps/2/
 
 # Render all examples (parallel execution, output shown per-job when complete)
 render\:all:
