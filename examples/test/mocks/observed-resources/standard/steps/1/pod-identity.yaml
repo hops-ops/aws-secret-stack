@@ -1,0 +1,12 @@
+apiVersion: aws.hops.ops.com.ai/v1alpha1
+kind: PodIdentity
+metadata:
+  name: external-secrets-pod-identity
+  annotations:
+    crossplane.io/composition-resource-name: pod-identity
+status:
+  conditions:
+  - type: Ready
+    status: "True"
+  - type: Synced
+    status: "True"

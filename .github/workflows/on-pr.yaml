@@ -32,7 +32,9 @@ jobs:
       examples: |
         [
           { "example": "examples/secretstacks/minimal.yaml" },
-          { "example": "examples/secretstacks/standard.yaml" }
+          { "example": "examples/secretstacks/standard.yaml" },
+          { "example": "examples/secretstacks/standard.yaml", "observed_resources": "examples/test/mocks/observed-resources/standard/steps/1/" },
+          { "example": "examples/secretstacks/standard.yaml", "observed_resources": "examples/test/mocks/observed-resources/standard/steps/2/" }
         ]
       api_path: apis/secretstacks
       error_on_missing_schemas: true
@@ -47,6 +49,7 @@ jobs:
       aws-use-oidc: true
       aws-account-id: "034489662075"
       aws-region: us-east-2
+      aws-role-duration-seconds: 7200
       write-env-files: true
       env-vars: |
         {
@@ -56,12 +59,15 @@ jobs:
         }
       debug-resource-types: |
         [
-          "networks.aws.hops.ops.com.ai",
-          "autoeksclusters.aws.hops.ops.com.ai",
           "secretstacks.aws.hops.ops.com.ai"
         ]
-      timeout-minutes: 60
-      cleanup-timeout-minutes: 45
+      delete-extra-resources: |
+        [
+          "autoeksclusters.aws.hops.ops.com.ai"
+        ]
+      timeout-minutes: 44
+      cleanup-timeout-minutes: 20
+      delete-extra-resources-timeout-minutes: 20
 
   publish:
     needs:
