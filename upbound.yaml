@@ -9,9 +9,9 @@ spec:
     package: xpkg.crossplane.io/crossplane-contrib/function-auto-ready
     version: '>=v0.6.3'
   - apiVersion: pkg.crossplane.io/v1
-    kind: Configuration
-    package: ghcr.io/hops-ops/helm-external-secrets
-    version: '>=v0.4.0'
+    kind: Provider
+    package: xpkg.crossplane.io/crossplane-contrib/provider-helm
+    version: '>=v1'
   - apiVersion: pkg.crossplane.io/v1
     kind: Configuration
     package: ghcr.io/hops-ops/aws-pod-identity

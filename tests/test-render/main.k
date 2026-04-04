@@ -7,7 +7,7 @@ import models.k8s.apimachinery.pkg.apis.meta.v1 as metav1
 
 _items = [
     # ==========================================================================
-    # Test 1: Minimal input renders Helm ExternalSecrets and Pod Identity
+    # Test 1: Minimal input renders Helm Release and Pod Identity
     # ==========================================================================
     metav1alpha1.CompositionTest {
         metadata.name = "minimal-renders-helm-and-pod-identity"
@@ -29,10 +29,10 @@ _items = [
             }
             assertResources = [
                 {
-                    apiVersion = "helm.hops.ops.com.ai/v1alpha1"
-                    kind = "ExternalSecrets"
+                    apiVersion = "helm.m.crossplane.io/v1beta1"
+                    kind = "Release"
                     metadata.name = "external-secrets"
-                    spec.clusterName = "my-cluster"
+                    spec.forProvider.chart.name = "external-secrets"
                 }
                 {
                     apiVersion = "aws.hops.ops.com.ai/v1alpha1"
@@ -76,10 +76,10 @@ _items = [
             }
             assertResources = [
                 {
-                    apiVersion = "helm.hops.ops.com.ai/v1alpha1"
-                    kind = "ExternalSecrets"
+                    apiVersion = "helm.m.crossplane.io/v1beta1"
+                    kind = "Release"
                     metadata.name = "external-secrets"
-                    spec.namespace = "secrets-system"
+                    spec.forProvider.namespace = "secrets-system"
                 }
                 {
                     apiVersion = "aws.hops.ops.com.ai/v1alpha1"
@@ -152,8 +152,8 @@ _items = [
             # Only Helm + PodIdentity should render, no KMS Key
             assertResources = [
                 {
-                    apiVersion = "helm.hops.ops.com.ai/v1alpha1"
-                    kind = "ExternalSecrets"
+                    apiVersion = "helm.m.crossplane.io/v1beta1"
+                    kind = "Release"
                     metadata.name = "no-sops"
                 }
                 {
@@ -186,8 +186,8 @@ _items = [
             }
             observedResources = [
                 {
-                    apiVersion = "helm.hops.ops.com.ai/v1alpha1"
-                    kind = "ExternalSecrets"
+                    apiVersion = "helm.m.crossplane.io/v1beta1"
+                    kind = "Release"
                     metadata = {
                         name = "external-secrets"
                         annotations = {"crossplane.io/composition-resource-name" = "helm-external-secrets"}
@@ -329,8 +329,8 @@ _items = [
             }
             observedResources = [
                 {
-                    apiVersion = "helm.hops.ops.com.ai/v1alpha1"
-                    kind = "ExternalSecrets"
+                    apiVersion = "helm.m.crossplane.io/v1beta1"
+                    kind = "Release"
                     metadata = {
                         name = "external-secrets"
                         annotations = {"crossplane.io/composition-resource-name" = "helm-external-secrets"}
@@ -387,8 +387,8 @@ _items = [
             }
             observedResources = [
                 {
-                    apiVersion = "helm.hops.ops.com.ai/v1alpha1"
-                    kind = "ExternalSecrets"
+                    apiVersion = "helm.m.crossplane.io/v1beta1"
+                    kind = "Release"
                     metadata = {
                         name = "no-store"
                         annotations = {"crossplane.io/composition-resource-name" = "helm-external-secrets"}
@@ -402,8 +402,8 @@ _items = [
             # Only Helm + PodIdentity + Usage, no SecretStore, no KMS Key
             assertResources = [
                 {
-                    apiVersion = "helm.hops.ops.com.ai/v1alpha1"
-                    kind = "ExternalSecrets"
+                    apiVersion = "helm.m.crossplane.io/v1beta1"
+                    kind = "Release"
                     metadata.name = "no-store"
                 }
                 {
@@ -437,8 +437,8 @@ _items = [
             }
             observedResources = [
                 {
-                    apiVersion = "helm.hops.ops.com.ai/v1alpha1"
-                    kind = "ExternalSecrets"
+                    apiVersion = "helm.m.crossplane.io/v1beta1"
+                    kind = "Release"
                     metadata = {
                         name = "external-secrets"
                         annotations = {"crossplane.io/composition-resource-name" = "helm-external-secrets"}

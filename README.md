@@ -4,7 +4,7 @@ Installs external-secrets with AWS Pod Identity for Secrets Manager and SSM Para
 
 ## Overview
 
-Composes the base `helm.hops.ops.com.ai/ExternalSecrets` XRD with `aws.hops.ops.com.ai/PodIdentity`.
+Composes a `helm.m.crossplane.io/Release` for external-secrets with `aws.hops.ops.com.ai/PodIdentity`.
 Automatically provisions IAM role and Pod Identity association for external-secrets' service account.
 
 Additionally:
@@ -86,7 +86,7 @@ spec:
 
 | Resource | Condition | Description |
 |----------|-----------|-------------|
-| `helm.hops.ops.com.ai/ExternalSecrets` | Always | Base external-secrets Helm release |
+| `helm.m.crossplane.io/Release` | Always | external-secrets Helm release (chart v2.2.0) |
 | `aws.hops.ops.com.ai/PodIdentity` | Always | IAM role + Pod Identity with Secrets Manager, SSM, and KMS permissions |
 | `kubernetes.m.crossplane.io/Object` (SecretStore) | `secretStore.enabled` (default true) | ClusterSecretStore or SecretStore wired to AWS Secrets Manager via PodIdentity JWT auth |
 | `kms.aws.m.upbound.io/Key` | `sops.enabled` (default true) | KMS key with rotation for SOPS encryption. ARN exposed in `status.kmsKeyArn` |
