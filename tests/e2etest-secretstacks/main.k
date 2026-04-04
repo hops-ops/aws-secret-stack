@@ -6,7 +6,7 @@
 # This test creates:
 # 1. An AutoEKSCluster using subnet IDs from the persistent hops-test network
 # 2. An aws SecretStack that composes:
-#    - helm.hops.ops.com.ai/ExternalSecrets (base Helm release)
+#    - helm.m.crossplane.io/Release (external-secrets Helm release)
 #    - aws.hops.ops.com.ai/PodIdentity (IAM role + Pod Identity for Secrets Manager/SSM)
 #    - kms.aws.m.upbound.io/Key (SOPS KMS key)
 #    - kubernetes.m.crossplane.io/Object (SecretStore)

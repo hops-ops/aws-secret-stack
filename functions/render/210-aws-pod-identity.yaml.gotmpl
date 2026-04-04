@@ -84,8 +84,8 @@ spec:
     resourceRef:
       name: {{ $state.name }}-pod-identity
   by:
-    apiVersion: helm.hops.ops.com.ai/v1alpha1
-    kind: ExternalSecrets
+    apiVersion: helm.m.crossplane.io/v1beta1
+    kind: Release
     resourceRef:
       name: {{ $state.name }}
   replayDeletion: true
