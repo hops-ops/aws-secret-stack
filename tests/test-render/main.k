@@ -144,7 +144,6 @@ _items = [
                         spec.provider.aws = {
                             service = "SecretsManager"
                             region = "us-east-1"
-                            auth.jwt.serviceAccountRef.name = "external-secrets"
                         }
                     }
                 }
@@ -198,10 +197,6 @@ _items = [
                         spec.provider.aws = {
                             service = "SecretsManager"
                             region = "us-east-1"
-                            auth.jwt.serviceAccountRef = {
-                                name = "external-secrets"
-                                namespace = "external-secrets"
-                            }
                         }
                     }
                 }
