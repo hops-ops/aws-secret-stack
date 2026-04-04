@@ -37,7 +37,7 @@ _items = [
                 {
                     apiVersion = "aws.hops.ops.com.ai/v1alpha1"
                     kind = "PodIdentity"
-                    metadata.name = "external-secrets-pod-identity"
+                    metadata.name = "external-secrets"
                     spec = {
                         clusterName = "my-cluster"
                         region = "us-east-1"
@@ -84,7 +84,7 @@ _items = [
                 {
                     apiVersion = "aws.hops.ops.com.ai/v1alpha1"
                     kind = "PodIdentity"
-                    metadata.name = "external-secrets-pod-identity"
+                    metadata.name = "external-secrets"
                     spec = {
                         rolePrefix = "prod-"
                         serviceAccount = {
@@ -248,7 +248,7 @@ _items = [
                 {
                     apiVersion = "aws.hops.ops.com.ai/v1alpha1"
                     kind = "PodIdentity"
-                    metadata.name = "no-store-pod-identity"
+                    metadata.name = "no-store"
                 }
             ]
         }
