@@ -97,76 +97,7 @@ _items = [
     }
 
     # ==========================================================================
-    # Test 3: SOPS KMS key rendered by default
-    # ==========================================================================
-    metav1alpha1.CompositionTest {
-        metadata.name = "sops-kms-key-rendered-by-default"
-        spec = {
-            compositionPath = "apis/secretstacks/composition.yaml"
-            xrdPath = "apis/secretstacks/definition.yaml"
-            timeoutSeconds = 60
-            validate = False
-            xr = {
-                apiVersion = "aws.hops.ops.com.ai/v1alpha1"
-                kind = "SecretStack"
-                metadata.name = "external-secrets"
-                spec = {
-                    clusterName = "my-cluster"
-                    aws.region = "us-east-1"
-                }
-            }
-            assertResources = [
-                {
-                    apiVersion = "kms.aws.m.upbound.io/v1beta1"
-                    kind = "Key"
-                    metadata.name = "external-secrets-sops"
-                    spec.forProvider = {
-                        region = "us-east-1"
-                        enableKeyRotation = True
-                    }
-                }
-            ]
-        }
-    }
-
-    # ==========================================================================
-    # Test 4: SOPS KMS key disabled when sops.enabled is false
-    # ==========================================================================
-    metav1alpha1.CompositionTest {
-        metadata.name = "sops-disabled-no-kms-key"
-        spec = {
-            compositionPath = "apis/secretstacks/composition.yaml"
-            xrdPath = "apis/secretstacks/definition.yaml"
-            timeoutSeconds = 60
-            validate = False
-            xr = {
-                apiVersion = "aws.hops.ops.com.ai/v1alpha1"
-                kind = "SecretStack"
-                metadata.name = "no-sops"
-                spec = {
-                    clusterName = "my-cluster"
-                    sops.enabled = False
-                    aws.region = "us-east-1"
-                }
-            }
-            # Only Helm + PodIdentity should render, no KMS Key
-            assertResources = [
-                {
-                    apiVersion = "helm.m.crossplane.io/v1beta1"
-                    kind = "Release"
-                    metadata.name = "no-sops"
-                }
-                {
-                    apiVersion = "aws.hops.ops.com.ai/v1alpha1"
-                    kind = "PodIdentity"
-                    metadata.name = "no-sops-pod-identity"
-                }
-            ]
-        }
-    }
-
-    # ==========================================================================
-    # Test 5: Namespaced SecretStore renders by default when ESO is ready
+    # Test 3: Namespaced SecretStore renders by default when ESO is ready
     # ==========================================================================
     metav1alpha1.CompositionTest {
         metadata.name = "secret-store-default-namespaced"
@@ -222,93 +153,7 @@ _items = [
     }
 
     # ==========================================================================
-    # Test 6: KMS ARN exposed in status when key is ready
-    # ==========================================================================
-    metav1alpha1.CompositionTest {
-        metadata.name = "kms-arn-in-status"
-        spec = {
-            compositionPath = "apis/secretstacks/composition.yaml"
-            xrdPath = "apis/secretstacks/definition.yaml"
-            timeoutSeconds = 60
-            validate = False
-            xr = {
-                apiVersion = "aws.hops.ops.com.ai/v1alpha1"
-                kind = "SecretStack"
-                metadata.name = "external-secrets"
-                spec = {
-                    clusterName = "my-cluster"
-                    aws.region = "us-east-1"
-                }
-            }
-            observedResources = [
-                {
-                    apiVersion = "kms.aws.m.upbound.io/v1beta1"
-                    kind = "Key"
-                    metadata = {
-                        name = "external-secrets-sops"
-                        annotations = {"crossplane.io/composition-resource-name" = "kms-key"}
-                    }
-                    status = {
-                        conditions = [
-                            {type = "Ready", status = "True"}
-                            {type = "Synced", status = "True"}
-                        ]
-                        atProvider.arn = "arn:aws:kms:us-east-1:123456789012:key/test-key-id"
-                    }
-                }
-            ]
-            assertResources = [
-                {
-                    apiVersion = "aws.hops.ops.com.ai/v1alpha1"
-                    kind = "SecretStack"
-                    metadata.name = "external-secrets"
-                    status.kmsKeyArn = "arn:aws:kms:us-east-1:123456789012:key/test-key-id"
-                }
-            ]
-        }
-    }
-
-    # ==========================================================================
-    # Test 7: KMS key uses AWS tags with Name tag
-    # ==========================================================================
-    metav1alpha1.CompositionTest {
-        metadata.name = "kms-key-tags-include-name"
-        spec = {
-            compositionPath = "apis/secretstacks/composition.yaml"
-            xrdPath = "apis/secretstacks/definition.yaml"
-            timeoutSeconds = 60
-            validate = False
-            xr = {
-                apiVersion = "aws.hops.ops.com.ai/v1alpha1"
-                kind = "SecretStack"
-                metadata.name = "my-stack"
-                spec = {
-                    clusterName = "prod"
-                    aws = {
-                        region = "us-west-2"
-                        tags = {
-                            environment = "production"
-                        }
-                    }
-                }
-            }
-            assertResources = [
-                {
-                    apiVersion = "kms.aws.m.upbound.io/v1beta1"
-                    kind = "Key"
-                    metadata.name = "my-stack-sops"
-                    spec.forProvider.tags = {
-                        Name = "my-stack-sops"
-                        environment = "production"
-                        "hops.ops.com.ai/managed" = "true"
-                        "hops.ops.com.ai/secretstack" = "my-stack"
-                    }
-                }
-            ]
-        }
-    }
-    # ==========================================================================
-    # Test 8: ClusterSecretStore when scope is Cluster (opt-in)
+    # Test 4: ClusterSecretStore when scope is Cluster (opt-in)
     # ==========================================================================
     metav1alpha1.CompositionTest {
         metadata.name = "cluster-secret-store-opt-in"
@@ -365,7 +210,7 @@ _items = [
     }
 
     # ==========================================================================
-    # Test 9: SecretStore disabled renders nothing
+    # Test 5: SecretStore disabled renders nothing
     # ==========================================================================
     metav1alpha1.CompositionTest {
         metadata.name = "secret-store-disabled"
@@ -381,7 +226,6 @@ _items = [
                 spec = {
                     clusterName = "my-cluster"
                     secretStore.enabled = False
-                    sops.enabled = False
                     aws.region = "us-east-1"
                 }
             }
@@ -399,7 +243,7 @@ _items = [
                     ]
                 }
             ]
-            # Only Helm + PodIdentity + Usage, no SecretStore, no KMS Key
+            # Only Helm + PodIdentity + Usage, no SecretStore
             assertResources = [
                 {
                     apiVersion = "helm.m.crossplane.io/v1beta1"
@@ -416,7 +260,7 @@ _items = [
     }
 
     # ==========================================================================
-    # Test 10: Custom SecretStore name
+    # Test 6: Custom SecretStore name
     # ==========================================================================
     metav1alpha1.CompositionTest {
         metadata.name = "custom-secret-store-name"

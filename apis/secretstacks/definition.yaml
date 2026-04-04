@@ -104,13 +104,6 @@ spec:
                   name:
                     description: Name of the SecretStore resource. Defaults to "default".
                     type: string
-              sops:
-                description: SOPS KMS key configuration. Creates a KMS key for encrypting secrets in git via the hops CLI.
-                type: object
-                properties:
-                  enabled:
-                    description: Enable SOPS KMS key creation. Defaults to true.
-                    type: boolean
               aws:
                 description: AWS configuration for Pod Identity.
                 type: object
@@ -142,8 +135,5 @@ spec:
               ready:
                 description: Overall readiness.
                 type: boolean
-              kmsKeyArn:
-                description: ARN of the SOPS KMS key. Empty when sops is disabled.
-                type: string
         required:
         - spec

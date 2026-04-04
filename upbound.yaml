@@ -18,21 +18,16 @@ spec:
     version: '>=v0.10.0'
   - apiVersion: pkg.crossplane.io/v1
     kind: Provider
-    package: xpkg.crossplane.io/crossplane-contrib/provider-aws-kms
-    version: '>=v2'
-  - apiVersion: pkg.crossplane.io/v1
-    kind: Provider
     package: xpkg.crossplane.io/crossplane-contrib/provider-kubernetes
     version: '>=v1'
   description: Installs external-secrets with AWS Pod Identity for Secrets Manager
-    and SSM Parameter Store access. Optionally creates a SOPS KMS key and a ClusterSecretStore
-    for ESO.
+    and SSM Parameter Store access. Optionally creates a SecretStore for ESO.
   license: Apache-2.0
   maintainer: Patrick Lee Scott <pat@patscott.io>
   readme: |
     # aws-secret-stack
 
-    Installs external-secrets via the base Helm XRD and configures AWS Pod Identity
+    Installs external-secrets via Helm Release and configures AWS Pod Identity
     for Secrets Manager and SSM Parameter Store access.
   repository: ghcr.io/hops-ops/aws-secret-stack
   source: github.com/hops-ops/aws-secret-stack

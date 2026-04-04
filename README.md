@@ -1,6 +1,6 @@
 # aws-secret-stack
 
-Installs external-secrets with AWS Pod Identity for Secrets Manager and SSM Parameter Store access. Optionally creates a SecretStore and SOPS KMS key.
+Installs external-secrets with AWS Pod Identity for Secrets Manager and SSM Parameter Store access. Optionally creates a SecretStore.
 
 ## Overview
 
@@ -9,11 +9,10 @@ Automatically provisions IAM role and Pod Identity association for external-secr
 
 Additionally:
 - Creates a **SecretStore** (namespaced by default) or **ClusterSecretStore** (opt-in) pointing to AWS Secrets Manager, so ExternalSecrets can pull secrets immediately
-- Optionally creates a **SOPS KMS key** for encrypting secrets in git via the hops CLI (enabled by default)
 
 ## Usage
 
-Minimal — installs ESO, PodIdentity, ClusterSecretStore, and SOPS KMS key:
+Minimal — installs ESO, PodIdentity, and SecretStore:
 
 ```yaml
 apiVersion: aws.hops.ops.com.ai/v1alpha1
@@ -64,7 +63,7 @@ spec:
     region: us-east-1
 ```
 
-ESO only — no SecretStore, no SOPS KMS key:
+ESO only — no SecretStore:
 
 ```yaml
 apiVersion: aws.hops.ops.com.ai/v1alpha1
@@ -75,8 +74,6 @@ metadata:
 spec:
   clusterName: my-cluster
   secretStore:
-    enabled: false
-  sops:
     enabled: false
   aws:
     region: us-east-1
@@ -89,7 +86,6 @@ spec:
 | `helm.m.crossplane.io/Release` | Always | external-secrets Helm release (chart v2.2.0) |
 | `aws.hops.ops.com.ai/PodIdentity` | Always | IAM role + Pod Identity with Secrets Manager, SSM, and KMS permissions |
 | `kubernetes.m.crossplane.io/Object` (SecretStore) | `secretStore.enabled` (default true) | ClusterSecretStore or SecretStore wired to AWS Secrets Manager via PodIdentity JWT auth |
-| `kms.aws.m.upbound.io/Key` | `sops.enabled` (default true) | KMS key with rotation for SOPS encryption. ARN exposed in `status.kmsKeyArn` |
 
 ## SecretStore Options
 
@@ -104,9 +100,6 @@ spec:
 | Field | Description |
 |-------|-------------|
 | `ready` | Overall stack readiness |
-| `kmsKeyArn` | ARN of the SOPS KMS key (empty when sops disabled) |
-
-The `kmsKeyArn` is used by the hops CLI to write `.sops.yaml` for git-based secret encryption.
 
 ## Development
 

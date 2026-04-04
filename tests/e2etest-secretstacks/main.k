@@ -1,14 +1,13 @@
 # e2etest-secretstacks - aws SecretStack E2E Test
 # ================================================
-# Tests installation of external-secrets with AWS Pod Identity,
-# SOPS KMS key, and ClusterSecretStore.
+# Tests installation of external-secrets with AWS Pod Identity
+# and ClusterSecretStore.
 #
 # This test creates:
 # 1. An AutoEKSCluster using subnet IDs from the persistent hops-test network
 # 2. An aws SecretStack that composes:
 #    - helm.m.crossplane.io/Release (external-secrets Helm release)
 #    - aws.hops.ops.com.ai/PodIdentity (IAM role + Pod Identity for Secrets Manager/SSM)
-#    - kms.aws.m.upbound.io/Key (SOPS KMS key)
 #    - kubernetes.m.crossplane.io/Object (SecretStore)
 #
 # Uses persistent network infrastructure from aws-network e2e test (hops-test)
