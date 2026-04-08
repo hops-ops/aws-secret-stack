@@ -19,7 +19,7 @@ _items = [
             xr = {
                 apiVersion = "aws.hops.ops.com.ai/v1alpha1"
                 kind = "SecretStack"
-                metadata.name = "external-secrets"
+                metadata.name = "test"
                 spec = {
                     clusterName = "my-cluster"
                     aws = {
@@ -37,7 +37,7 @@ _items = [
                 {
                     apiVersion = "aws.hops.ops.com.ai/v1alpha1"
                     kind = "PodIdentity"
-                    metadata.name = "external-secrets"
+                    metadata.name = "test-external-secrets"
                     spec = {
                         clusterName = "my-cluster"
                         region = "us-east-1"
@@ -64,7 +64,7 @@ _items = [
             xr = {
                 apiVersion = "aws.hops.ops.com.ai/v1alpha1"
                 kind = "SecretStack"
-                metadata.name = "external-secrets"
+                metadata.name = "test"
                 spec = {
                     clusterName = "prod-cluster"
                     namespace = "secrets-system"
@@ -84,12 +84,51 @@ _items = [
                 {
                     apiVersion = "aws.hops.ops.com.ai/v1alpha1"
                     kind = "PodIdentity"
-                    metadata.name = "external-secrets"
+                    metadata.name = "test-external-secrets"
                     spec = {
                         rolePrefix = "prod-"
                         serviceAccount = {
                             namespace = "secrets-system"
                         }
+                    }
+                }
+            ]
+        }
+    }
+
+    # ==========================================================================
+    # Test 3: Release name stays external-secrets even when stack name differs
+    # ==========================================================================
+    metav1alpha1.CompositionTest {
+        metadata.name = "release-name-stays-external-secrets"
+        spec = {
+            compositionPath = "apis/secretstacks/composition.yaml"
+            xrdPath = "apis/secretstacks/definition.yaml"
+            timeoutSeconds = 60
+            validate = False
+            xr = {
+                apiVersion = "aws.hops.ops.com.ai/v1alpha1"
+                kind = "SecretStack"
+                metadata.name = "pat-local"
+                spec = {
+                    clusterName = "pat-local"
+                    aws.region = "us-east-2"
+                }
+            }
+            assertResources = [
+                {
+                    apiVersion = "helm.m.crossplane.io/v1beta1"
+                    kind = "Release"
+                    metadata.name = "external-secrets"
+                    spec.forProvider.namespace = "external-secrets"
+                }
+                {
+                    apiVersion = "aws.hops.ops.com.ai/v1alpha1"
+                    kind = "PodIdentity"
+                    metadata.name = "pat-local-external-secrets"
+                    spec = {
+                        clusterName = "pat-local"
+                        region = "us-east-2"
                     }
                 }
             ]
@@ -109,7 +148,7 @@ _items = [
             xr = {
                 apiVersion = "aws.hops.ops.com.ai/v1alpha1"
                 kind = "SecretStack"
-                metadata.name = "external-secrets"
+                metadata.name = "test"
                 spec = {
                     clusterName = "my-cluster"
                     aws.region = "us-east-1"
@@ -133,7 +172,7 @@ _items = [
                 {
                     apiVersion = "kubernetes.m.crossplane.io/v1alpha1"
                     kind = "Object"
-                    metadata.name = "external-secrets-secret-store"
+                    metadata.name = "test-secret-store"
                     spec.forProvider.manifest = {
                         apiVersion = "external-secrets.io/v1"
                         kind = "SecretStore"
@@ -164,7 +203,7 @@ _items = [
             xr = {
                 apiVersion = "aws.hops.ops.com.ai/v1alpha1"
                 kind = "SecretStack"
-                metadata.name = "external-secrets"
+                metadata.name = "test"
                 spec = {
                     clusterName = "my-cluster"
                     secretStore.scope = "Cluster"
@@ -189,7 +228,7 @@ _items = [
                 {
                     apiVersion = "kubernetes.m.crossplane.io/v1alpha1"
                     kind = "Object"
-                    metadata.name = "external-secrets-cluster-secret-store"
+                    metadata.name = "test-cluster-secret-store"
                     spec.forProvider.manifest = {
                         apiVersion = "external-secrets.io/v1"
                         kind = "ClusterSecretStore"
@@ -229,7 +268,7 @@ _items = [
                     apiVersion = "helm.m.crossplane.io/v1beta1"
                     kind = "Release"
                     metadata = {
-                        name = "no-store"
+                        name = "external-secrets"
                         annotations = {"crossplane.io/composition-resource-name" = "helm-external-secrets"}
                     }
                     status.conditions = [
@@ -243,12 +282,12 @@ _items = [
                 {
                     apiVersion = "helm.m.crossplane.io/v1beta1"
                     kind = "Release"
-                    metadata.name = "no-store"
+                    metadata.name = "external-secrets"
                 }
                 {
                     apiVersion = "aws.hops.ops.com.ai/v1alpha1"
                     kind = "PodIdentity"
-                    metadata.name = "no-store"
+                    metadata.name = "no-store-external-secrets"
                 }
             ]
         }
@@ -267,7 +306,7 @@ _items = [
             xr = {
                 apiVersion = "aws.hops.ops.com.ai/v1alpha1"
                 kind = "SecretStack"
-                metadata.name = "external-secrets"
+                metadata.name = "test"
                 spec = {
                     clusterName = "my-cluster"
                     secretStore.name = "aws-sm"
@@ -292,7 +331,7 @@ _items = [
                 {
                     apiVersion = "kubernetes.m.crossplane.io/v1alpha1"
                     kind = "Object"
-                    metadata.name = "external-secrets-secret-store"
+                    metadata.name = "test-secret-store"
                     spec.forProvider.manifest.metadata.name = "aws-sm"
                 }
             ]
