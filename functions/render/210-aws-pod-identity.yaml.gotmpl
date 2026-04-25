@@ -73,7 +73,7 @@ spec:
 apiVersion: protection.crossplane.io/v1beta1
 kind: Usage
 metadata:
-  name: {{ $state.name }}-delete-helm-before-pod-identity
+  name: {{ $state.name }}-delete-helm-eso-before-pod-identity
   annotations:
     {{ setResourceNameAnnotation "usage-pod-identity" }}
   labels: {{ $state.labels | toJson }}
