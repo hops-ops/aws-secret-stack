@@ -32,7 +32,23 @@ _items = [
                     apiVersion = "helm.m.crossplane.io/v1beta1"
                     kind = "Release"
                     metadata.name = "external-secrets"
-                    spec.forProvider.chart.name = "external-secrets"
+                    spec.forProvider = {
+                        chart.name = "external-secrets"
+                        values = {
+                            resources = {
+                                requests = {cpu = "15m", memory = "100Mi"}
+                                limits = {cpu = "100m", memory = "256Mi"}
+                            }
+                            certController.resources = {
+                                requests = {cpu = "15m", memory = "100Mi"}
+                                limits = {cpu = "100m", memory = "256Mi"}
+                            }
+                            webhook.resources = {
+                                requests = {cpu = "15m", memory = "100Mi"}
+                                limits = {cpu = "100m", memory = "256Mi"}
+                            }
+                        }
+                    }
                 }
                 {
                     apiVersion = "aws.hops.ops.com.ai/v1alpha1"
